@@ -11,6 +11,7 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
+import it.mfx.monker.models.Move;
 import it.mfx.monker.models.Tag;
 
 @Dao
@@ -29,6 +30,12 @@ public interface TagDao {
 
     @Query("SELECT COUNT(*) from tags")
     int countItems();
+
+    @Query("SELECT COUNT(*) from moves m left join tags t on (m.tag_id = t.id) where m.tag_id = :tag_id")
+    int countMovesOf(String tag_id);
+
+    @Query("SELECT m.* from moves m left join tags t on (m.tag_id = t.id) where m.tag_id = :tag_id")
+    List<Move> getMovesOf(String tag_id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Tag... items);

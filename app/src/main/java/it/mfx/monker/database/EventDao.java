@@ -12,6 +12,7 @@ import android.arch.persistence.room.Update;
 import java.util.List;
 
 import it.mfx.monker.models.Event;
+import it.mfx.monker.models.Move;
 
 @Dao
 public interface EventDao {
@@ -26,6 +27,12 @@ public interface EventDao {
 
     @Query("SELECT COUNT(*) from events")
     int countItems();
+
+    @Query("SELECT COUNT(*) from moves m left join events e on (m.event_id = e.id) where m.event_id = :event_id")
+    int countMovesOf(String event_id);
+
+    @Query("SELECT m.* from moves m left join events e on (m.event_id = e.id) where m.event_id = :event_id")
+    List<Move> getMovesOf(String event_id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Event... items);

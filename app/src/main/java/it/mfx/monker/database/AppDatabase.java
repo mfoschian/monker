@@ -1,7 +1,6 @@
 package it.mfx.monker.database;
 
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
@@ -14,7 +13,7 @@ import it.mfx.monker.models.Event;
 import it.mfx.monker.models.Move;
 import it.mfx.monker.models.Tag;
 
-@Database(entities = {Move.class, Tag.class, Event.class}, version = 1, exportSchema = true)
+@Database(entities = {Move.class, Tag.class, Event.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static String dbName = "shopaholicDB";
@@ -43,12 +42,14 @@ public abstract class AppDatabase extends RoomDatabase {
         return UUID.randomUUID().toString();
     }
 
-    /*
-    public void saveItem( Item item ) {
+    //
+    // Moves
+    //
+    public void save( Move item ) {
         moveDao().updateAll(item);
     }
 
-    public Item addItem( Item item ) {
+    public Move add( Move item ) {
         if( item.id == null ) {
             item.id = newId();
         }
@@ -57,62 +58,87 @@ public abstract class AppDatabase extends RoomDatabase {
         return item;
     }
 
-    public LiveData<List<Item>> getLiveItems() { return moveDao().getAll(); }
-
-    public List<Item> getItems() { return moveDao().getAllSync(); }
-
-    public Item getItem(String item_id) {
-        return moveDao().findById(item_id);
-    }
-
-    public boolean hasShopItem(String item_id) {
-        int count  = tagDao().countForItem(item_id);
-        return count > 0;
-    }
-
-    public void deleteItem(Item item) {
+    public void del(Move item) {
         if( item == null )
             return;
 
         moveDao().delete(item);
     }
 
+    public Move getMove(String id) {
+        return moveDao().findById(id);
+    }
+
+    public List<Move> getMoves() { return moveDao().getAllSync(); }
+
+    public List<Move> getMovesOfTag( String tag_id ) {
+        return tagDao().getMovesOf(tag_id);
+    }
+
+    public List<Move> getMovesOfEvent( String event_id ) {
+        return eventDao().getMovesOf(event_id);
+    }
 
 
-    public ShopItem addShopItem( ShopItem item ) {
-        if( item.sid == null ) {
-            item.sid = newId();
+    //
+    // Tags
+    //
+    public void save( Tag item ) {
+        tagDao().updateAll(item);
+    }
+
+    public Tag add( Tag item ) {
+        if( item.id == null ) {
+            item.id = newId();
         }
         tagDao().insertAll(item);
+
         return item;
     }
 
-    public void deleteShopItem(ShopItem item) {
+    public void del(Tag item) {
+        if( item == null )
+            return;
+
         tagDao().delete(item);
     }
 
-
-    public LiveData<List<ShopItem>> getShopItemsLive() { return tagDao().getActive(); }
-
-    public List<ShopItem> getShopItems() { return tagDao().getAllSync(); }
-    public List<ShopItem> getActiveShopItems() { return tagDao().getActiveSync(); }
-
-    public List<ShopItem> getActiveShopItemsByZone() { return tagDao().getActiveByZoneSync(); }
-
-    public void saveShopItems(List<ShopItem> shopitems ) {
-        tagDao().update(shopitems);
-    }
-    public void saveShopItem(ShopItem shopitem) {
-        tagDao().update(shopitem);
+    public Tag getTag(String id) {
+        return tagDao().findById(id);
     }
 
-    public List<String> getActiveShopNames() {
-        return eventDao().getNamesSync();
+    public List<Tag> getTags() { return tagDao().getAllSync(); }
+
+
+    //
+    // Events
+    //
+    public void save( Event item ) {
+        eventDao().updateAll(item);
     }
 
-    public List<String> getZoneNames(String shop_id) {
-        return eventDao().getZoneNamesSync(shop_id);
+    public Event add( Event item ) {
+        if( item.id == null ) {
+            item.id = newId();
+        }
+        eventDao().insertAll(item);
+
+        return item;
     }
 
-    */
+    public void del(Event item) {
+        if( item == null )
+            return;
+
+        eventDao().delete(item);
+    }
+
+    public Event getEvent(String id) {
+        return eventDao().findById(id);
+    }
+
+    public List<Event> getEvents() { return eventDao().getAllSync(); }
+
+
+
 }
