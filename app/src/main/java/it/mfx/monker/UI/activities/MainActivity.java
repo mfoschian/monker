@@ -1,4 +1,4 @@
-package it.mfx.monker.activities;
+package it.mfx.monker.UI.activities;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
