@@ -13,7 +13,7 @@ import it.mfx.monker.models.Event;
 import it.mfx.monker.models.Move;
 import it.mfx.monker.models.Tag;
 
-@Database(entities = {Move.class, Tag.class, Event.class}, version = 1, exportSchema = false)
+@Database(entities = {Move.class, Tag.class, Event.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static String dbName = "shopaholicDB";
