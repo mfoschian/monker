@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="it.mfx.monker.UI.activities.EventFormActivity">
+    <item
+        android:id="@+id/menu_save"
+        android:icon="@android:drawable/ic_menu_save"
+        android:orderInCategory="100"
+        android:title="@string/save_label"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/delete_label"
+        app:showAsAction="always" />
+</menu>
