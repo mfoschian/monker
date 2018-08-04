@@ -4,4 +4,19 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="save_label">Save</string>
     <string name="delete_label">Delete</string>
+
+    <string name="event_list_title">Events</string>
+    <string name="tag_list_title">Tags</string>
+    <string name="moves_list_title">Movements</string>
+
+    <string name="event_form_title">Event</string>
+    <string name="tag_form_title">Tag</string>
+    <string name="moves_form_title">Movement</string>
+
+
+    <string name="no_events">No events</string>
+    <string name="please_reload_data">Please reload data</string>
+
+
+    <string name="no_tags">No events</string>
 </resources>

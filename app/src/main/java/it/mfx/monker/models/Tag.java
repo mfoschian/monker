@@ -23,6 +23,6 @@ public class Tag {
     public String icon;
     public long priority = 0;
 
-    public String parent_id;
+    public String parent_id = null;
 
 }

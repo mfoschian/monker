@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="it.mfx.monker.UI.activities.EventFormActivity">
+    tools:context="it.mfx.monker.ui.activities.EventFormActivity">
     <item
         android:id="@+id/menu_save"
         android:icon="@android:drawable/ic_menu_save"
