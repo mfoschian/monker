@@ -119,22 +119,29 @@ public class TagListActivity extends AppCompatActivity {
         app().getTagsAsync(new MyApp.Callback<List<Tag>>() {
             @Override
             public void onSuccess(List<Tag> result) {
-                mTags.clear();
-                mTags.addAll(result);
-                adapter.notifyDataSetChanged();
+                final List<Tag> tags = result;
 
-                if( mTags.size() == 0 ) {
-                    // Nessun evento scaricato ...
-                    String msg =getResources().getString(R.string.no_tags)
-                            //+ "." + getResources().getString(R.string.please_reload_data)
-                            ;
-                    Utils.showModalMsg(TagListActivity.this, msg, new Utils.ConfirmListener() {
-                        @Override
-                        public void onPressed() {
-                            finish();
+                Utils.runOnUIthread(new Utils.UICallback() {
+                    @Override
+                    public void onUIReady() {
+                        mTags.clear();
+                        mTags.addAll(tags);
+                        adapter.notifyDataSetChanged();
+
+                        if( mTags.size() == 0 ) {
+                            // Nessun evento scaricato ...
+                            String msg =getResources().getString(R.string.no_tags)
+                                    //+ "." + getResources().getString(R.string.please_reload_data)
+                                    ;
+                            Utils.showModalMsg(TagListActivity.this, msg, new Utils.ConfirmListener() {
+                                @Override
+                                public void onPressed() {
+                                    finish();
+                                }
+                            });
                         }
-                    });
-                }
+                    }
+                });
             }
 
             @Override

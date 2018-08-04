@@ -46,7 +46,10 @@ public abstract class AppDatabase extends RoomDatabase {
     // Moves
     //
     public void save( Move item ) {
-        moveDao().updateAll(item);
+        if( item.id == null )
+            add(item);
+        else
+            moveDao().updateAll(item);
     }
 
     public Move add( Move item ) {
@@ -84,7 +87,10 @@ public abstract class AppDatabase extends RoomDatabase {
     // Tags
     //
     public void save( Tag item ) {
-        tagDao().updateAll(item);
+        if( item.id == null )
+            add(item);
+        else
+            tagDao().updateAll(item);
     }
 
     public Tag add( Tag item ) {
@@ -114,7 +120,10 @@ public abstract class AppDatabase extends RoomDatabase {
     // Events
     //
     public void save( Event item ) {
-        eventDao().updateAll(item);
+        if( item.id == null )
+            add(item);
+        else
+            eventDao().updateAll(item);
     }
 
     public Event add( Event item ) {

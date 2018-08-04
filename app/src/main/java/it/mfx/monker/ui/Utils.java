@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,17 +22,22 @@ public class Utils {
         parent.startActivity(intent);
     }
 
-    public static void showMsg(final Context ctx, final String msg) {
-        //Toast
-
+    public static boolean isUiThread() {
         boolean isUiThread = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 ? Looper.getMainLooper().isCurrentThread()
                 : Thread.currentThread() == Looper.getMainLooper().getThread();
 
-        //And, if you wish to run something on the ui thread, you can use this:
+        return isUiThread;
+    }
 
+    public interface UICallback {
+        void onUIReady();
+    }
+
+    public static void runOnUIthread( @NonNull final UICallback cb ) {
+        boolean isUiThread = isUiThread();
         if( isUiThread ) {
-            Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show();
+            cb.onUIReady();
         }
         else {
 
@@ -39,10 +45,21 @@ public class Utils {
                 @Override
                 public void run() {
                     //this runs on the ui thread
-                    Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show();
+                    cb.onUIReady();
                 }
             });
         }
+
+    }
+
+    public static void showMsg(final Context ctx, final String msg) {
+
+        runOnUIthread(new UICallback() {
+            @Override
+            public void onUIReady() {
+                Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public interface ConfirmListener {

@@ -3,7 +3,6 @@ package it.mfx.monker;
 import android.app.Application;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.telecom.Call;
 
 import java.util.List;
 
@@ -154,7 +153,7 @@ public class MyApp extends Application {
     //==============================================
     //  Tags
     //==============================================
-    public List<Tag> getTag() {
+    public List<Tag> getTags() {
         List<Tag> res = db().tagDao().getAllSync();
         return res;
     }
@@ -164,7 +163,7 @@ public class MyApp extends Application {
             @Override
             public void run() {
                 try {
-                    List<Tag> res = getTag();
+                    List<Tag> res = getTags();
                     cb.onSuccess(res);
                 } catch (Exception err) {
                     cb.onError(err);
@@ -255,7 +254,7 @@ public class MyApp extends Application {
     //==============================================
     //  Moves
     //==============================================
-    public List<Move> getMove() {
+    public List<Move> getMoves() {
         List<Move> res = db().moveDao().getAllSync();
         return res;
     }
@@ -265,7 +264,7 @@ public class MyApp extends Application {
             @Override
             public void run() {
                 try {
-                    List<Move> res = getMove();
+                    List<Move> res = getMoves();
                     cb.onSuccess(res);
                 } catch (Exception err) {
                     cb.onError(err);

@@ -119,22 +119,30 @@ public class EventListActivity extends AppCompatActivity {
         app().getEventsAsync(new MyApp.Callback<List<Event>>() {
             @Override
             public void onSuccess(List<Event> result) {
-                mEvents.clear();
-                mEvents.addAll(result);
-                adapter.notifyDataSetChanged();
+                final List<Event> events = result;
 
-                if (mEvents.size() == 0) {
-                    // Nessun evento scaricato ...
-                    String msg = getResources().getString(R.string.no_events)
-                            //+ "." + getResources().getString(R.string.please_reload_data)
-                            ;
-                    Utils.showModalMsg(EventListActivity.this, msg, new Utils.ConfirmListener() {
-                        @Override
-                        public void onPressed() {
-                            finish();
+                Utils.runOnUIthread(new Utils.UICallback() {
+                    @Override
+                    public void onUIReady() {
+                        mEvents.clear();
+                        mEvents.addAll(events);
+                        adapter.notifyDataSetChanged();
+
+                        if (mEvents.size() == 0) {
+                            // Nessun evento scaricato ...
+                            String msg = getResources().getString(R.string.no_events)
+                                    //+ "." + getResources().getString(R.string.please_reload_data)
+                                    ;
+                            Utils.showModalMsg(EventListActivity.this, msg, new Utils.ConfirmListener() {
+                                @Override
+                                public void onPressed() {
+                                    finish();
+                                }
+                            });
                         }
-                    });
-                }
+
+                    }
+                });
             }
 
             @Override
