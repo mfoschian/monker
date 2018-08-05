@@ -25,4 +25,5 @@
 
 
     <string name="no_tags">No tags</string>
+    <string name="parent_tag_none_label">No parent tag</string>
 </resources>

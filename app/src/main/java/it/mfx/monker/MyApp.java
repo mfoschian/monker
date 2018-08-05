@@ -172,12 +172,17 @@ public class MyApp extends Application {
         });
     }
 
+    public Tag getTagById( @NonNull final String tag_id ) {
+        Tag res = db().tagDao().findById(tag_id);
+        return res;
+    }
+
     public void getTagByIdAsync(@NonNull final String tag_id, @NonNull final Callback<Tag> cb) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Tag res = db().tagDao().findById(tag_id);
+                    Tag res = getTagById(tag_id);
                     cb.onSuccess(res);
                 } catch (Exception err) {
                     cb.onError(err);
