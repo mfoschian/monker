@@ -1,11 +1,6 @@
 package it.mfx.monker.ui.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +14,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -82,7 +76,7 @@ public class EventFormActivity extends AppCompatActivity implements DatePickerFr
 
 
         String val = currentTarget.getText().toString();
-        val += " " + String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute);
+        val += " " + String.format( "%02d", hourOfDay) + ":" + String.format("%02d", minute);
         currentTarget.setText(val);
     }
 
@@ -123,8 +117,8 @@ public class EventFormActivity extends AppCompatActivity implements DatePickerFr
         if( intent != null ) {
             event_id = intent.getStringExtra(PARM_EVENT_ID);
         }
-        else if( event_id != null ) {
-            event_id = savedInstanceState.getParcelable(PARM_EVENT_ID);
+        if( event_id == null ) {
+            event_id = savedInstanceState.getString(PARM_EVENT_ID);
         }
 
         if( event_id != null ) {
@@ -218,30 +212,7 @@ public class EventFormActivity extends AppCompatActivity implements DatePickerFr
     }
 
     void showMsg(final String msg) {
-
         Utils.showMsg(this,msg);
-        /*
-        boolean isUiThread = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                ? Looper.getMainLooper().isCurrentThread()
-                : Thread.currentThread() == Looper.getMainLooper().getThread();
-
-        //And, if you wish to run something on the ui thread, you can use this:
-
-        if( isUiThread ) {
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-        }
-        else {
-
-            final Context ctx = this;
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    //this runs on the ui thread
-                    Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-        */
     }
 
     void showSaved() {

@@ -1,10 +1,6 @@
 package it.mfx.monker.ui.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import it.mfx.monker.MyApp;
 import it.mfx.monker.R;
@@ -52,8 +47,8 @@ public class TagFormActivity extends AppCompatActivity {
         if( intent != null ) {
             tag_id = intent.getStringExtra(PARM_TAG_ID);
         }
-        else if( tag_id != null ) {
-            tag_id = savedInstanceState.getParcelable(PARM_TAG_ID);
+        if( tag_id == null ) {
+            tag_id = savedInstanceState.getString(PARM_TAG_ID);
         }
 
         if( tag_id != null ) {
