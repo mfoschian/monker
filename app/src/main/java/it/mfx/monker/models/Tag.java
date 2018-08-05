@@ -10,7 +10,8 @@ import android.support.annotation.NonNull;
 @Entity(tableName = "tags",
         indices = {
                 @Index(value = "priority"),
-                @Index(value = "parent_id")
+                @Index(value = "parent_id"),
+                @Index(value = "label")
         })
 public class Tag {
 

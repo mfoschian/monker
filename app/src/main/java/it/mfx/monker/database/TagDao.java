@@ -16,10 +16,10 @@ import it.mfx.monker.models.Tag;
 
 @Dao
 public interface TagDao {
-    @Query("SELECT * FROM tags order by priority desc")
+    @Query("SELECT * FROM tags order by priority desc, label")
     List<Tag> getAllSync();
 
-    @Query("SELECT * FROM tags order by priority desc")
+    @Query("SELECT * FROM tags order by priority desc, label")
     LiveData<List<Tag>> getAll();
 
     @Query("SELECT * FROM tags where id LIKE :id")
