@@ -17,6 +17,7 @@ import android.widget.Toast;
 import it.mfx.monker.MyApp;
 import it.mfx.monker.R;
 import it.mfx.monker.models.Tag;
+import it.mfx.monker.ui.Utils;
 
 public class TagFormActivity extends AppCompatActivity {
 
@@ -108,18 +109,13 @@ public class TagFormActivity extends AppCompatActivity {
             });
         }
         else if( menu_id == R.id.menu_delete ) {
-            app.delAsync(mTag, new MyApp.CallbackSimple() {
-                @Override
-                public void onSuccess() {
-                    showDeleted();
-                    finish();
-                }
+            Utils.confirm(this, getString(R.string.tag_delete_confirm), android.R.drawable.ic_dialog_alert, new Utils.ConfirmListener() {
+                        @Override
+                        public void onPressed() {
+                            deleteItem();
+                        }
+                    });
 
-                @Override
-                public void onError(Exception e) {
-                    showError(e);
-                }
-            });
         }
         else if( menu_id == android.R.id.home ) {
             closeForm();
@@ -135,30 +131,26 @@ public class TagFormActivity extends AppCompatActivity {
         finish();
     }
 
+    void deleteItem() {
+        MyApp app = (MyApp)getApplication();
+
+        app.delAsync(mTag, new MyApp.CallbackSimple() {
+            @Override
+            public void onSuccess() {
+                showDeleted();
+                closeForm();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                showError(e);
+            }
+        });
+
+    }
 
     void showMsg(final String msg) {
-        //Toast
-
-        boolean isUiThread = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                ? Looper.getMainLooper().isCurrentThread()
-                : Thread.currentThread() == Looper.getMainLooper().getThread();
-
-        //And, if you wish to run something on the ui thread, you can use this:
-
-        if( isUiThread ) {
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-        }
-        else {
-
-            final Context ctx = this;
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    //this runs on the ui thread
-                    Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show();
-                }
-            });
-        }
+        Utils.showMsg(this,msg);
     }
 
     void showSaved() {

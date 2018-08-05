@@ -183,18 +183,13 @@ public class EventFormActivity extends AppCompatActivity implements DatePickerFr
             return true;
         }
         else if( menu_id == R.id.menu_delete ) {
-            app.delAsync(mEvent, new MyApp.CallbackSimple() {
+            Utils.confirm(this, getString(R.string.event_delete_confirm), android.R.drawable.ic_dialog_alert, new Utils.ConfirmListener() {
                 @Override
-                public void onSuccess() {
-                    showDeleted();
-                    finish();
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    showError(e);
+                public void onPressed() {
+                    deleteItem();
                 }
             });
+
         }
         else if( menu_id == android.R.id.home ) {
             closeForm();
@@ -203,6 +198,23 @@ public class EventFormActivity extends AppCompatActivity implements DatePickerFr
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    void deleteItem() {
+        MyApp app = (MyApp)getApplication();
+
+        app.delAsync(mEvent, new MyApp.CallbackSimple() {
+            @Override
+            public void onSuccess() {
+                showDeleted();
+                closeForm();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                showError(e);
+            }
+        });
     }
 
     void showMsg(final String msg) {

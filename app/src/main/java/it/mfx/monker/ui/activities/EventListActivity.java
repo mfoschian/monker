@@ -2,9 +2,6 @@ package it.mfx.monker.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -100,19 +97,25 @@ public class EventListActivity extends AppCompatActivity {
     private List<Event> mEvents;
 
 
-    private void returnChoosedEvent(String event_id ) {
+    private void onChoosedEvent(String event_id ) {
         //app().setCurrentEvent( event_id );
-        Intent data = new Intent();
-        data.setData(Uri.parse(event_id));
-        setResult(RESULT_OK, data);
-        finish();
+       //Intent data = new Intent();
+        //data.setData(Uri.parse(event_id));
+        //setResult(RESULT_OK, data);
+        //finish();
+
+        Context ctx = this;
+        Intent intent = new Intent(ctx, EventFormActivity.class);
+        intent.putExtra(EventFormActivity.PARM_EVENT_ID, event_id);
+        startActivityForResult(intent, MyApp.IntentRequests.EDIT_EVENT_REQUEST);
+
     }
 
     private void addEvent() {
         Context ctx = this;
         Intent intent = new Intent(ctx, EventFormActivity.class);
         //intent.putExtra(EventFormActivity.SUGGESTED_NAME_ARG, suggestedName);
-        startActivityForResult(intent, MyApp.IntentRequests.NEW_EVENT_REQUEST);
+        startActivityForResult(intent, MyApp.IntentRequests.EDIT_EVENT_REQUEST);
     }
 
     private void reloadData() {
@@ -136,7 +139,7 @@ public class EventListActivity extends AppCompatActivity {
                             Utils.showModalMsg(EventListActivity.this, msg, new Utils.ConfirmListener() {
                                 @Override
                                 public void onPressed() {
-                                    finish();
+                                    //finish();
                                 }
                             });
                         }
@@ -181,7 +184,7 @@ public class EventListActivity extends AppCompatActivity {
         adapter = new EventRecyclerViewAdapter(mEvents, new EventListActivity.Listener() {
             @Override
             public void onEventSelected(String event_id) {
-                returnChoosedEvent(event_id);
+                onChoosedEvent(event_id);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -214,7 +217,7 @@ public class EventListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if( requestCode == MyApp.IntentRequests.NEW_EVENT_REQUEST ) {
+        if( requestCode == MyApp.IntentRequests.EDIT_EVENT_REQUEST) {
             if( resultCode == RESULT_OK ) {
                 reloadData();
             }

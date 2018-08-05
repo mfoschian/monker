@@ -2,7 +2,6 @@ package it.mfx.monker.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -99,19 +98,22 @@ public class TagListActivity extends AppCompatActivity {
     private List<Tag> mTags;
 
 
-    private void returnChoosedTag(String tag_id ) {
-        //app().setCurrentEvent( event_id );
-        Intent data = new Intent();
-        data.setData(Uri.parse(tag_id));
-        setResult(RESULT_OK, data);
-        finish();
+    private void onChoosedTag(String tag_id ) {
+        //Intent data = new Intent();
+        //data.setData(Uri.parse(tag_id));
+        //setResult(RESULT_OK, data);
+        //finish();
+        Context ctx = this;
+        Intent intent = new Intent(ctx, TagFormActivity.class);
+        intent.putExtra(TagFormActivity.PARM_TAG_ID, tag_id);
+        startActivityForResult(intent, MyApp.IntentRequests.EDIT_TAG_REQUEST);
     }
 
     private void addTag() {
         Context ctx = this;
         Intent intent = new Intent(ctx, TagFormActivity.class);
         //intent.putExtra(TagFormActivity.SUGGESTED_NAME_ARG, suggestedName);
-        startActivityForResult(intent, MyApp.IntentRequests.NEW_TAG_REQUEST);
+        startActivityForResult(intent, MyApp.IntentRequests.EDIT_TAG_REQUEST);
 
     }
 
@@ -129,14 +131,14 @@ public class TagListActivity extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
 
                         if( mTags.size() == 0 ) {
-                            // Nessun evento scaricato ...
+                            // Nessun tag scaricato ...
                             String msg =getResources().getString(R.string.no_tags)
                                     //+ "." + getResources().getString(R.string.please_reload_data)
                                     ;
                             Utils.showModalMsg(TagListActivity.this, msg, new Utils.ConfirmListener() {
                                 @Override
                                 public void onPressed() {
-                                    finish();
+                                    //finish();
                                 }
                             });
                         }
@@ -179,7 +181,7 @@ public class TagListActivity extends AppCompatActivity {
         adapter = new TagRecyclerViewAdapter(mTags, new TagListActivity.Listener() {
             @Override
             public void onItemSelected(String tag_id) {
-                returnChoosedTag(tag_id);
+                onChoosedTag(tag_id);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -214,7 +216,7 @@ public class TagListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if( requestCode == MyApp.IntentRequests.NEW_TAG_REQUEST ) {
+        if( requestCode == MyApp.IntentRequests.EDIT_TAG_REQUEST) {
             if( resultCode == RESULT_OK ) {
                 reloadData();
             }

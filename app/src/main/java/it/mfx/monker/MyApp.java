@@ -21,8 +21,8 @@ public class MyApp extends Application {
         final public static int SHOP_RUN_REQUEST = 8002;
         final public static int PERMISSIONS_REQUEST = 8003;
         final public static int CHOOSE_IMPORT_FILE_REQUEST = 8004;
-        final public static int NEW_EVENT_REQUEST = 8005;
-        final public static int NEW_TAG_REQUEST = 8006;
+        final public static int EDIT_EVENT_REQUEST = 8005;
+        final public static int EDIT_TAG_REQUEST = 8006;
     }
 
     AppDatabase db() {

@@ -144,6 +144,14 @@ public class Utils {
         builder.show();
     }
 
+    public static void confirm(Context ctx, String message, final ConfirmListener yesCb ) {
+        confirm(ctx, null, message, null, yesCb );
+    }
+
+    public static void confirm(Context ctx, String message, Integer icon_id, final ConfirmListener yesCb ) {
+        confirm(ctx, null, message, icon_id, yesCb );
+    }
+
     public static void confirm(Context ctx, String title, String message, Integer icon_id, final ConfirmListener yesCb ) {
         confirmBase(ctx, title, message, icon_id, yesCb, new ConfirmListener() {
             @Override
