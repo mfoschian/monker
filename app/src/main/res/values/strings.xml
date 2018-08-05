@@ -11,13 +11,14 @@
 
     <string name="event_form_title">Event</string>
     <string name="tag_form_title">Tag</string>
-    <string name="moves_form_title">Movement</string>
+    <string name="move_form_title">Movement</string>
 
     <string name="event_delete_confirm">Please, confirm deletion of event</string>
     <string name="tag_delete_confirm">Please, confirm deletion of tag</string>
 
     <string name="event_label_hint">Label</string>
     <string name="tag_label_hint">Label</string>
+    <string name="move_description_hint">Description</string>
 
     <string name="no_events">No events</string>
     <string name="please_reload_data">Please reload data</string>
