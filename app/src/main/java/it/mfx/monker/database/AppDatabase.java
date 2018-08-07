@@ -14,7 +14,7 @@ import it.mfx.monker.models.Event;
 import it.mfx.monker.models.Move;
 import it.mfx.monker.models.Tag;
 
-@Database(entities = {Move.class, Tag.class, Event.class}, version = 2)
+@Database(entities = {Move.class, Tag.class, Event.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static String dbName = "monkerDB";
@@ -26,10 +26,11 @@ public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase newInstance(Context context) {
 
         Migration M_01_02 = new SimpleMigration(1,2, "CREATE INDEX index_tags_label ON tags(label)");
+        Migration M_02_03 = new SimpleMigration(2,3, "ALTER TABLE tags ADD childs INTEGER NOT NULL DEFAULT 0;");
 
         RoomDatabase.Builder<AppDatabase> b = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, dbName);
         AppDatabase db = b
-                .addMigrations( M_01_02 )
+                .addMigrations( M_01_02, M_02_03 )
                 .fallbackToDestructiveMigration()
                 .build();
 

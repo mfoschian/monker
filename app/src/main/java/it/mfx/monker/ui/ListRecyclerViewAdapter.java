@@ -29,6 +29,14 @@ public class ListRecyclerViewAdapter<_Type, _Holder extends RecyclerView.ViewHol
         mBinder = binder;
     }
 
+    public ListRecyclerViewAdapter( @NonNull List<_Type> items, int item_layout_id, @NonNull HolderFactory<_Holder> factory, @NonNull Binder binder ) {
+        mItems = items;
+        mListener = null;
+        mItemLayoutId = item_layout_id;
+        mHolderFactory = factory;
+        mBinder = binder;
+    }
+
 
     @Override
     public _Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

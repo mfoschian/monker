@@ -16,14 +16,16 @@ import it.mfx.monker.models.Tag;
 
 @Dao
 public interface TagDao {
-    @Query("SELECT * FROM tags order by priority desc, label")
+    @Query("SELECT t.*, t2.childs"
+            + " FROM tags t "
+            + " LEFT OUTER JOIN (SELECT parent_id, count(*) as childs FROM tags GROUP BY parent_id) t2 "
+            + " ON t2.parent_id = t.id"
+            + " ORDER BY t.priority desc, t.label")
     List<Tag> getAllSync();
 
     @Query("SELECT t.*, t2.childs"
             + " FROM tags t "
-            + " LEFT OUTER JOIN "
-            + "(SELECT parent_id, count(*) as childs FROM tags GROUP BY parent_id)"
-            + " t2 "
+            + " LEFT OUTER JOIN (SELECT parent_id, count(*) as childs FROM tags GROUP BY parent_id) t2 "
             + " ON t2.parent_id = t.id"
             + " WHERE t.parent_id = :parent_id "
             + " ORDER BY t.priority desc, t.label")
@@ -31,9 +33,7 @@ public interface TagDao {
 
     @Query("SELECT t.*, t2.childs"
             + " FROM tags t "
-            + " LEFT OUTER JOIN "
-            + "(SELECT parent_id, count(*) as childs FROM tags GROUP BY parent_id)"
-            + " t2 "
+            + " LEFT OUTER JOIN (SELECT parent_id, count(*) as childs FROM tags GROUP BY parent_id) t2 "
             + " ON t2.parent_id = t.id"
             + " WHERE t.parent_id IS NULL "
             + " ORDER BY t.priority desc, t.label")
@@ -41,13 +41,22 @@ public interface TagDao {
 
 
 
-    @Query("SELECT * FROM tags order by priority desc, label")
+    @Query("SELECT t.*, t2.childs FROM tags t "
+            + " LEFT OUTER JOIN (SELECT parent_id, count(*) as childs FROM tags GROUP BY parent_id) t2 "
+            + " ON t2.parent_id = t.id"
+            + " order by priority desc, label")
     LiveData<List<Tag>> getAll();
 
-    @Query("SELECT * FROM tags where id LIKE :id")
+    @Query("SELECT t.*, t2.childs FROM tags t"
+            + " LEFT OUTER JOIN (SELECT parent_id, count(*) as childs FROM tags GROUP BY parent_id) t2 "
+            + " ON t2.parent_id = t.id"
+            + " where id LIKE :id ")
     Tag findById(String id);
 
-    @Query("SELECT * FROM tags where parent_id LIKE :tag_id")
+    @Query("SELECT t.*, t2.childs FROM tags t "
+            + " LEFT OUTER JOIN (SELECT parent_id, count(*) as childs FROM tags GROUP BY parent_id) t2 "
+            + " ON t2.parent_id = t.id"
+            + " where t.parent_id LIKE :tag_id")
     List<Tag> findByParent(String tag_id);
 
     @Query("SELECT COUNT(*) from tags")

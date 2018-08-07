@@ -14,10 +14,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.mfx.monker.MyApp;
 import it.mfx.monker.R;
 import it.mfx.monker.models.Tag;
 import it.mfx.monker.ui.HolderFactory;
 import it.mfx.monker.ui.ListRecyclerViewAdapter;
+import it.mfx.monker.ui.Utils;
 
 public class TagChooserFragment extends Fragment {
 
@@ -25,12 +27,14 @@ public class TagChooserFragment extends Fragment {
     //private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
 
-    String mParentTagId;
-
-    public interface Listener {
-        void onTagSelected(String tag_id);
+    private String mParentTagId;
+    public String getParentTagId() {
+        return mParentTagId;
     }
 
+    public interface Listener {
+        void onTagSelected(final Tag tag);
+    }
 
     private class TagViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
@@ -51,11 +55,6 @@ public class TagChooserFragment extends Fragment {
 
     private ListRecyclerViewAdapter<Tag, TagViewHolder, Listener> adapter;
     private List<Tag> mTags;
-
-
-
-
-
     private Listener mListener;
 
 
@@ -71,11 +70,35 @@ public class TagChooserFragment extends Fragment {
     }
 
 
-    private void onChoosedTag( String tag_id ) {
-        if( mListener != null )
-            mListener.onTagSelected(tag_id);
+    private void onChoosedTag( Tag tag ) {
+
+        if( mListener != null && tag != null )
+            mListener.onTagSelected(tag);
     }
 
+    private void loadTags() {
+
+        MyApp app = (MyApp)getActivity().getApplication();
+        app.getTagsAsync(mParentTagId, new MyApp.Callback<List<Tag>>() {
+            @Override
+            public void onSuccess(List<Tag> result) {
+                mTags.clear();
+                mTags.addAll(result);
+                Utils.runOnUIthread(new Utils.UICallback() {
+                    @Override
+                    public void onUIReady() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +107,8 @@ public class TagChooserFragment extends Fragment {
         if (getArguments() != null) {
             mParentTagId = getArguments().getString(ARG_PARENT_TAG_ID);
         }
+        else
+            mParentTagId = null;
     }
 
     @Override
@@ -102,7 +127,7 @@ public class TagChooserFragment extends Fragment {
             }
 
             mTags = new ArrayList<>();
-            adapter = new ListRecyclerViewAdapter<Tag, TagViewHolder, Listener>(mTags, R.layout.tag_chooser_item,
+            adapter = new ListRecyclerViewAdapter<>(mTags, R.layout.tag_chooser_item,
                     new HolderFactory<TagViewHolder>() {
                         @Override
                         public TagViewHolder createHolder(View view) {
@@ -115,25 +140,18 @@ public class TagChooserFragment extends Fragment {
                             holder.mItem = item;
                             holder.mTagLabelView.setText(item.label);
 
-                            if( listener != null ) {
-                                holder.mView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        String tag_id = holder.mItem.id;
-                                        listener.onTagSelected(tag_id);
-                                    }
-                                });
-                            }
-                        }
-                    },
-                    new Listener() {
-                        @Override
-                        public void onTagSelected(String tag_id) {
-                            onChoosedTag(tag_id);
+                            holder.mView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onChoosedTag(holder.mItem);
+                                }
+                            });
                         }
                     });
 
             recyclerView.setAdapter(adapter);
+
+            loadTags();
         }
         return view;
     }
@@ -144,9 +162,6 @@ public class TagChooserFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof Listener) {
             mListener = (Listener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement Listener");
         }
     }
 
