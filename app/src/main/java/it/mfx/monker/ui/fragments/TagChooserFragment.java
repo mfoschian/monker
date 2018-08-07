@@ -25,7 +25,7 @@ public class TagChooserFragment extends Fragment {
 
     private static final String ARG_PARENT_TAG_ID = "parent_id";
     //private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 1;
+    private int mColumnCount = 2;
 
     private String mParentTagId;
     public String getParentTagId() {
