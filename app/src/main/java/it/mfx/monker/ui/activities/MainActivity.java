@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,8 +21,12 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import java.util.List;
+
+import it.mfx.monker.MyApp;
 import it.mfx.monker.R;
 import it.mfx.monker.models.Event;
+import it.mfx.monker.models.Tag;
 import it.mfx.monker.ui.Utils;
 
 public class MainActivity extends AppCompatActivity {
@@ -65,6 +70,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        MyApp app = (MyApp)getApplication();
+        app.getTagsAsync(null, new MyApp.Callback<List<Tag>>() {
+            @Override
+            public void onSuccess(List<Tag> result) {
+                Log.d("TEST", "There are " + result.size() + " tags");
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 

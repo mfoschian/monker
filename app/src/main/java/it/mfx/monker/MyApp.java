@@ -153,6 +153,15 @@ public class MyApp extends Application {
     //==============================================
     //  Tags
     //==============================================
+    public List<Tag> getTags(String parent_id) {
+        List<Tag> res;
+        if( parent_id == null )
+            res = db().tagDao().getAllRootsSync();
+        else
+            res = db().tagDao().getAllSync(parent_id);
+        return res;
+    }
+
     public List<Tag> getTags() {
         List<Tag> res = db().tagDao().getAllSync();
         return res;
@@ -171,6 +180,21 @@ public class MyApp extends Application {
             }
         });
     }
+
+    public void getTagsAsync(final String parent_id, @NonNull final Callback<List<Tag>> cb) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    List<Tag> res = getTags(parent_id);
+                    cb.onSuccess(res);
+                } catch (Exception err) {
+                    cb.onError(err);
+                }
+            }
+        });
+    }
+
 
     public Tag getTagById( @NonNull final String tag_id ) {
         Tag res = db().tagDao().findById(tag_id);

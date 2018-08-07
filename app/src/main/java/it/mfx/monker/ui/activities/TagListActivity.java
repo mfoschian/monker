@@ -22,6 +22,8 @@ import java.util.List;
 import it.mfx.monker.MyApp;
 import it.mfx.monker.R;
 import it.mfx.monker.models.Tag;
+import it.mfx.monker.ui.HolderFactory;
+import it.mfx.monker.ui.ListRecyclerViewAdapter;
 import it.mfx.monker.ui.Utils;
 
 public class TagListActivity extends AppCompatActivity {
@@ -31,60 +33,20 @@ public class TagListActivity extends AppCompatActivity {
         void onItemSelected(String tag_id);
     }
 
+    public class TagViewHolder extends RecyclerView.ViewHolder {
+        public final View mView;
+        public final TextView mTagLabelView;
+        public Tag mItem;
 
-    public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerViewAdapter.ViewHolder> {
-
-        private final List<Tag> mTags;
-        private Listener mListener;
-
-        public TagRecyclerViewAdapter(@NonNull List<Tag> items, @NonNull Listener listener) {
-            mTags = items;
-            mListener = listener;
-        }
-
-
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.event_list_item, parent, false);
-            return new ViewHolder(view);
+        public TagViewHolder(View view) {
+            super(view);
+            mView = view;
+            mTagLabelView = view.findViewById(R.id.tag_label);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-            Tag ev = mTags.get(position);
-            holder.mItem = ev;
-            holder.mTagLabelView.setText(ev.label);
-
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String ev_id = holder.mItem.id;
-                    mListener.onItemSelected( ev_id );
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return mTags.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final TextView mTagLabelView;
-            public Tag mItem;
-
-            public ViewHolder(View view) {
-                super(view);
-                mView = view;
-                mTagLabelView = view.findViewById(R.id.event_label);
-            }
-
-            @Override
-            public String toString() {
-                return super.toString() + " '" + mTagLabelView.getText() + "'";
-            }
+        public String toString() {
+            return super.toString() + " '" + mTagLabelView.getText() + "'";
         }
     }
 
@@ -94,7 +56,7 @@ public class TagListActivity extends AppCompatActivity {
         return app;
     }
 
-    private TagRecyclerViewAdapter adapter;
+    private ListRecyclerViewAdapter<Tag, TagViewHolder, Listener> adapter;
     private List<Tag> mTags;
 
 
@@ -178,12 +140,37 @@ public class TagListActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) view;
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        adapter = new TagRecyclerViewAdapter(mTags, new TagListActivity.Listener() {
-            @Override
-            public void onItemSelected(String tag_id) {
-                onChoosedTag(tag_id);
-            }
+        adapter = new ListRecyclerViewAdapter<Tag, TagViewHolder, Listener>(mTags, R.layout.tag_list_item,
+                new HolderFactory<TagViewHolder>() {
+                    @Override
+                    public TagViewHolder createHolder(View view) {
+                        return new TagViewHolder(view);
+                    }
+                },
+                new ListRecyclerViewAdapter.Binder<Tag, TagViewHolder, Listener>() {
+                    @Override
+                    public void bind(Tag item, final TagViewHolder holder, final Listener listener) {
+                        holder.mItem = item;
+                        holder.mTagLabelView.setText(item.label);
+
+                        if( listener != null ) {
+                            holder.mView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String ev_id = holder.mItem.id;
+                                    listener.onItemSelected(ev_id);
+                                }
+                            });
+                        }
+                    }
+                },
+                new Listener() {
+                        @Override
+                        public void onItemSelected (String tag_id){
+                        onChoosedTag(tag_id);
+                    }
         });
+
         recyclerView.setAdapter(adapter);
 
 

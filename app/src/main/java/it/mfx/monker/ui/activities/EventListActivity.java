@@ -22,6 +22,8 @@ import java.util.List;
 import it.mfx.monker.MyApp;
 import it.mfx.monker.R;
 import it.mfx.monker.models.Event;
+import it.mfx.monker.ui.HolderFactory;
+import it.mfx.monker.ui.ListRecyclerViewAdapter;
 import it.mfx.monker.ui.Utils;
 
 public class EventListActivity extends AppCompatActivity {
@@ -30,70 +32,30 @@ public class EventListActivity extends AppCompatActivity {
         void onEventSelected(String event_id);
     }
 
+    private class EventViewHolder extends RecyclerView.ViewHolder {
+        public final View mView;
+        public final TextView mEventLabelView;
+        public Event mItem;
 
-    public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder> {
-
-        private final List<Event> mEvents;
-        private Listener mListener;
-
-        public EventRecyclerViewAdapter(@NonNull List<Event> items, @NonNull Listener listener) {
-            mEvents = items;
-            mListener = listener;
-        }
-
-
-        @Override
-        public EventRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.event_list_item, parent, false);
-            return new EventRecyclerViewAdapter.ViewHolder(view);
+        public EventViewHolder(View view) {
+            super(view);
+            mView = view;
+            mEventLabelView = view.findViewById(R.id.event_label);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull final EventRecyclerViewAdapter.ViewHolder holder, int position) {
-            Event ev = mEvents.get(position);
-            holder.mItem = ev;
-            holder.mEventLabelView.setText(ev.label);
-
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String ev_id = holder.mItem.id;
-                    mListener.onEventSelected( ev_id );
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return mEvents.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final TextView mEventLabelView;
-            public Event mItem;
-
-            public ViewHolder(View view) {
-                super(view);
-                mView = view;
-                mEventLabelView = view.findViewById(R.id.event_label);
-            }
-
-            @Override
-            public String toString() {
-                return super.toString() + " '" + mEventLabelView.getText() + "'";
-            }
+        public String toString() {
+            return super.toString() + " '" + mEventLabelView.getText() + "'";
         }
     }
 
+    private ListRecyclerViewAdapter<Event, EventViewHolder, Listener> adapter;
 
     MyApp app() {
         MyApp app = (MyApp)getApplication();
         return app;
     }
 
-    private EventRecyclerViewAdapter adapter;
     private List<Event> mEvents;
 
 
@@ -160,7 +122,7 @@ public class EventListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
         if( bar != null ) {
@@ -181,12 +143,38 @@ public class EventListActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) view;
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        adapter = new EventRecyclerViewAdapter(mEvents, new EventListActivity.Listener() {
-            @Override
-            public void onEventSelected(String event_id) {
-                onChoosedEvent(event_id);
-            }
-        });
+        adapter = new ListRecyclerViewAdapter<Event, EventViewHolder, Listener>(mEvents, R.layout.event_list_item,
+                new HolderFactory<EventViewHolder>() {
+                    @Override
+                    public EventViewHolder createHolder(View view) {
+                        return new EventViewHolder(view);
+                    }
+                },
+                new ListRecyclerViewAdapter.Binder<Event,EventViewHolder,Listener>() {
+                    @Override
+                    public void bind(Event item, final EventViewHolder holder, final Listener listener) {
+                        holder.mItem = item;
+                        holder.mEventLabelView.setText(item.label);
+
+                        if( listener != null ) {
+                            holder.mView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String ev_id = holder.mItem.id;
+                                    listener.onEventSelected(ev_id);
+                                }
+                            });
+                        }
+
+                    }
+                },
+                new EventListActivity.Listener() {
+                    @Override
+                    public void onEventSelected(String event_id) {
+                        onChoosedEvent(event_id);
+                    }
+                });
+
         recyclerView.setAdapter(adapter);
 
         reloadData();

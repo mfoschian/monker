@@ -19,6 +19,28 @@ public interface TagDao {
     @Query("SELECT * FROM tags order by priority desc, label")
     List<Tag> getAllSync();
 
+    @Query("SELECT t.*, t2.childs"
+            + " FROM tags t "
+            + " LEFT OUTER JOIN "
+            + "(SELECT parent_id, count(*) as childs FROM tags GROUP BY parent_id)"
+            + " t2 "
+            + " ON t2.parent_id = t.id"
+            + " WHERE t.parent_id = :parent_id "
+            + " ORDER BY t.priority desc, t.label")
+    List<Tag> getAllSync(String parent_id);
+
+    @Query("SELECT t.*, t2.childs"
+            + " FROM tags t "
+            + " LEFT OUTER JOIN "
+            + "(SELECT parent_id, count(*) as childs FROM tags GROUP BY parent_id)"
+            + " t2 "
+            + " ON t2.parent_id = t.id"
+            + " WHERE t.parent_id IS NULL "
+            + " ORDER BY t.priority desc, t.label")
+    List<Tag> getAllRootsSync();
+
+
+
     @Query("SELECT * FROM tags order by priority desc, label")
     LiveData<List<Tag>> getAll();
 

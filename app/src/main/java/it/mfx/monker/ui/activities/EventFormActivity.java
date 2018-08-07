@@ -117,7 +117,7 @@ public class EventFormActivity extends AppCompatActivity implements DatePickerFr
         if( intent != null ) {
             event_id = intent.getStringExtra(PARM_EVENT_ID);
         }
-        if( event_id == null ) {
+        if( event_id == null && savedInstanceState != null ) {
             event_id = savedInstanceState.getString(PARM_EVENT_ID);
         }
 
