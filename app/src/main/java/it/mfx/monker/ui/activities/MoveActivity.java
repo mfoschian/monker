@@ -7,11 +7,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.util.List;
 
 import it.mfx.monker.R;
 import it.mfx.monker.models.Tag;
+import it.mfx.monker.ui.Utils;
 import it.mfx.monker.ui.fragments.TagChooserFragment;
 
 public class MoveActivity extends AppCompatActivity implements TagChooserFragment.Listener {
@@ -26,6 +28,9 @@ public class MoveActivity extends AppCompatActivity implements TagChooserFragmen
             fragmentManager.popBackStack();
     }
     */
+
+    TextView mTagLabel;
+    TextView mAmount;
 
 
     void changeFragmentTo(String parent_id) {
@@ -58,8 +63,24 @@ public class MoveActivity extends AppCompatActivity implements TagChooserFragmen
         transaction.commit();
     }
 
-    void setTagTo(Tag tag ) {
+    void setTagTo( final Tag tag ) {
         Log.i("TEST","Tag setted to " + tag.label);
+        Utils.runOnUIthread(new Utils.UICallback() {
+            @Override
+            public void onUIReady() {
+                String label;
+                if( tag == null ) {
+                    label = "";
+                }
+                else {
+                    label = tag.label;
+                    if( label == null )
+                        label = "";
+                }
+
+                mTagLabel.setText(label);
+            }
+        });
     }
 
     @Override
@@ -88,6 +109,9 @@ public class MoveActivity extends AppCompatActivity implements TagChooserFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.move_form);
+
+        mTagLabel = findViewById(R.id.move_tag);
+        mAmount = findViewById(R.id.move_amount);
 
         changeFragmentTo(null);
     }

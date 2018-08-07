@@ -35,7 +35,6 @@ tools:context=".ui.activities.MoveActivity">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="EUR"
@@ -51,14 +50,27 @@ tools:context=".ui.activities.MoveActivity">
         android:id="@+id/move_amount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_weight="1"
         android:ems="10"
         android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/move_amount_inout"
         app:layout_constraintStart_toEndOf="@+id/move_currency"
         app:layout_constraintTop_toBottomOf="@+id/appbar" />
 
 
+    <ImageView
+        android:id="@+id/move_amount_inout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/move_amount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/tag_label_cnt"
@@ -81,6 +93,31 @@ tools:context=".ui.activities.MoveActivity">
 
     </android.support.design.widget.TextInputLayout>
 
+    <TextView
+        android:id="@+id/move_tag"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TAG_LABEL"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/move_tag_clear"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tag_label_cnt" />
+
+    <ImageView
+        android:id="@+id/move_tag_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/move_tag"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tag_label_cnt"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
     <FrameLayout
         android:id="@+id/tags_frame"
         android:layout_width="0dp"
@@ -92,7 +129,7 @@ tools:context=".ui.activities.MoveActivity">
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tag_label_cnt" />
+        app:layout_constraintTop_toBottomOf="@+id/move_tag" />
 
 
 
