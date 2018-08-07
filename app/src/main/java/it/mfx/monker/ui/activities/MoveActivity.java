@@ -58,6 +58,9 @@ public class MoveActivity extends AppCompatActivity implements TagChooserFragmen
         transaction.commit();
     }
 
+    void setTagTo(Tag tag ) {
+        Log.i("TEST","Tag setted to " + tag.label);
+    }
 
     @Override
     public void onTagSelected(Tag tag) {
@@ -70,9 +73,16 @@ public class MoveActivity extends AppCompatActivity implements TagChooserFragmen
             changeFragmentTo(new_parent_id);
         }
         else
-            Log.i("TEST","Choosed tag " + tag.label);
+            setTagTo(tag);
     }
 
+    @Override
+    public void onTagForcedSelect(Tag tag) {
+        if( tag == null )
+            return;
+
+        setTagTo(tag);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -34,22 +35,19 @@ public class TagChooserFragment extends Fragment {
 
     public interface Listener {
         void onTagSelected(final Tag tag);
+        void onTagForcedSelect(final Tag tag);
     }
 
     private class TagViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mTagLabelView;
+        //public final TextView mTagLabel;
+        public final Button mTagLabel;
         public Tag mItem;
 
         public TagViewHolder(View view) {
             super(view);
             mView = view;
-            mTagLabelView = view.findViewById(R.id.tag_label);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mTagLabelView.getText() + "'";
+            mTagLabel = view.findViewById(R.id.tag_label);
         }
     }
 
@@ -74,6 +72,12 @@ public class TagChooserFragment extends Fragment {
 
         if( mListener != null && tag != null )
             mListener.onTagSelected(tag);
+    }
+
+    private void onChoosedTagForced( Tag tag ) {
+
+        if( mListener != null && tag != null )
+            mListener.onTagForcedSelect(tag);
     }
 
     private void loadTags() {
@@ -138,12 +142,19 @@ public class TagChooserFragment extends Fragment {
                         @Override
                         public void bind(Tag item, final TagViewHolder holder, final Listener listener) {
                             holder.mItem = item;
-                            holder.mTagLabelView.setText(item.label);
+                            holder.mTagLabel.setText(item.label);
 
-                            holder.mView.setOnClickListener(new View.OnClickListener() {
+                            holder.mTagLabel.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     onChoosedTag(holder.mItem);
+                                }
+                            });
+                            holder.mTagLabel.setOnLongClickListener(new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+                                    onChoosedTagForced(holder.mItem);
+                                    return true;
                                 }
                             });
                         }
