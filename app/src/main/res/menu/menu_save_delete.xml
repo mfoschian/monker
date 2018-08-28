@@ -11,6 +11,7 @@
     <item
         android:id="@+id/menu_delete"
         android:icon="@android:drawable/ic_menu_delete"
+        android:orderInCategory="110"
         android:title="@string/delete_label"
         app:showAsAction="always" />
 </menu>
